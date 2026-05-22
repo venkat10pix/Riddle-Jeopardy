@@ -1,6 +1,6 @@
 // Riddle Jeopardy - Riddle Pool Database
-// 6 categories, each with 2 riddles per difficulty level ($100, $200, $300, $400, $500)
-// Total of 60 standard riddles and 4 dedicated tie-breaker riddles.
+// 6 categories, each with 3 riddles per difficulty level ($100, $200, $300, $400, $500)
+// Total of 90 standard riddles and 10 dedicated tie-breaker riddles.
 
 const RIDDLE_POOL = {
   "Wordplay Wonders": {
@@ -18,6 +18,13 @@ const RIDDLE_POOL = {
         choices: ["A pot of gold", "The letter W", "A beautiful light", "The letter R"],
         answer: "The letter W",
         explanation: "THE LETTER W - Look closely at the word 'rainbow'—the very last letter is W!"
+      },
+      {
+        id: "word_100_3",
+        question: "What building has the most stories?",
+        choices: ["A library", "A skyscraper", "A school", "A museum"],
+        answer: "A library",
+        explanation: "A LIBRARY - A library is full of books, so it has thousands of 'stories' (tales) inside it!"
       }
     ],
     200: [
@@ -34,6 +41,13 @@ const RIDDLE_POOL = {
         choices: ["A teapot", "A ticket", "A toast", "A target"],
         answer: "A teapot",
         explanation: "A TEAPOT - It starts with the letter T, ends with T, and inside it, it holds delicious warm tea!"
+      },
+      {
+        id: "word_200_3",
+        question: "Which letter of the alphabet is a question?",
+        choices: ["Y", "R", "B", "U"],
+        answer: "Y",
+        explanation: "Y - The letter 'Y' sounds exactly like the question word 'Why?'!"
       }
     ],
     300: [
@@ -50,6 +64,13 @@ const RIDDLE_POOL = {
         choices: ["An envelope", "An eye", "An engine", "An eagle"],
         answer: "An envelope",
         explanation: "AN ENVELOPE - It starts with 'E' and ends with 'E', and you put a single letter (mail) inside it!"
+      },
+      {
+        id: "word_300_3",
+        question: "What starts with P, ends with E, and has thousands of letters?",
+        choices: ["A post office", "A page", "A package", "A puzzle"],
+        answer: "A post office",
+        explanation: "A POST OFFICE - It starts with P, ends with E, and houses thousands of paper letters (mail)!"
       }
     ],
     400: [
@@ -66,6 +87,13 @@ const RIDDLE_POOL = {
         choices: ["Bookkeeper", "Sleepless", "Committee", "Balloon"],
         answer: "Bookkeeper",
         explanation: "BOOKKEEPER - Count the double letters: oo, kk, and ee. They are right next to each other!"
+      },
+      {
+        id: "word_400_3",
+        question: "What word is spelled the same backward and forward?",
+        choices: ["Racecar", "Bicycle", "Rainbow", "Balloon"],
+        answer: "Racecar",
+        explanation: "RACECAR - The word R-A-C-E-C-A-R is a palindrome—it reads exactly the same from left to right and right to left!"
       }
     ],
     500: [
@@ -82,6 +110,13 @@ const RIDDLE_POOL = {
         choices: ["Smart", "Start", "Stare", "Stone"],
         answer: "Start",
         explanation: "START - Remove 'S' and you get 'tart' (a delicious pastry!). Remove 'S' and 'T' and you get 'art' (drawing and painting class!)"
+      },
+      {
+        id: "word_500_3",
+        question: "What word has two 'eyes' in it but cannot see?",
+        choices: ["Onion", "Science", "Eyeing", "Mirror"],
+        answer: "Onion",
+        explanation: "ONION - The word O-N-I-O-N has two letters 'O' which look like two eyes but cannot see!"
       }
     ]
   },
@@ -100,6 +135,13 @@ const RIDDLE_POOL = {
         choices: ["A caterpillar", "A snake", "A monkey", "A squirrel"],
         answer: "A snake",
         explanation: "A SNAKE - Snakes are legless reptiles that can slide up trees, and they make a 'hissing' sound!"
+      },
+      {
+        id: "anim_100_3",
+        question: "What do you call a baby bear?",
+        choices: ["A cub", "A pup", "A calf", "A kitten"],
+        answer: "A cub",
+        explanation: "A CUB - A baby bear, lion, or tiger is called a cub!"
       }
     ],
     200: [
@@ -116,6 +158,13 @@ const RIDDLE_POOL = {
         choices: ["An owl", "A moth", "A bat", "A flying squirrel"],
         answer: "A bat",
         explanation: "A BAT - Bats are nocturnal mammals that hang upside down to rest and use sonar (echolocation) to navigate!"
+      },
+      {
+        id: "anim_200_3",
+        question: "I am a bird, I can swim, but I cannot fly. I love the cold. What am I?",
+        choices: ["A penguin", "A duck", "A seagull", "A parrot"],
+        answer: "A penguin",
+        explanation: "A PENGUIN - Penguins are flightless birds that are excellent swimmers and live in cold climates!"
       }
     ],
     300: [
@@ -132,6 +181,13 @@ const RIDDLE_POOL = {
         choices: ["A jellyfish", "A starfish", "An octopus", "A crab"],
         answer: "An octopus",
         explanation: "AN OCTOPUS - Octopuses are amazing creatures with three hearts, copper-based blue blood, and eight powerful arms!"
+      },
+      {
+        id: "anim_300_3",
+        question: "What animal has the longest tongue relative to its body?",
+        choices: ["A chameleon", "A frog", "A giraffe", "An anteater"],
+        answer: "A chameleon",
+        explanation: "A CHAMELEON - A chameleon's tongue can be up to twice the length of its entire body!"
       }
     ],
     400: [
@@ -148,6 +204,13 @@ const RIDDLE_POOL = {
         choices: ["A sloth", "A panda", "A koala", "A grizzly bear"],
         answer: "A koala",
         explanation: "A KOALA - Koalas are marsupials from Australia that spend almost their entire lives sleeping and munching on eucalyptus leaves!"
+      },
+      {
+        id: "anim_400_3",
+        question: "What marine animal is known to hold hands while sleeping to keep from drifting apart?",
+        choices: ["A sea otter", "A dolphin", "A seal", "A penguin"],
+        answer: "A sea otter",
+        explanation: "A SEA OTTER - Sea otters hold hands in groups (called rafts) while sleeping to prevent currents from separating them!"
       }
     ],
     500: [
@@ -164,6 +227,13 @@ const RIDDLE_POOL = {
         choices: ["A sloth", "An elephant", "A hippo", "A rhino"],
         answer: "An elephant",
         explanation: "AN ELEPHANT - Elephants are so heavy and their leg bones are designed to support weight, making it impossible for them to jump!"
+      },
+      {
+        id: "anim_500_3",
+        question: "What animal has the largest eyes in the world?",
+        choices: ["A giant squid", "A blue whale", "An owl", "An elephant"],
+        answer: "A giant squid",
+        explanation: "A GIANT SQUID - The giant squid's eyes can grow to the size of a basketball to help them see in the dark deep ocean!"
       }
     ]
   },
@@ -182,6 +252,13 @@ const RIDDLE_POOL = {
         choices: ["A sponge", "A towel", "A cloud", "A rain coat"],
         answer: "A towel",
         explanation: "A TOWEL - As you use a towel to dry yourself off, the towel absorbs the water and gets wetter!"
+      },
+      {
+        id: "every_100_3",
+        question: "What belongs to you, but other people use it much more than you do?",
+        choices: ["Your name", "Your phone", "Your bicycle", "Your pencil"],
+        answer: "Your name",
+        explanation: "YOUR NAME - Your name belongs to you, but you rarely say it; instead, other people use it constantly to call or talk to you!"
       }
     ],
     200: [
@@ -198,6 +275,13 @@ const RIDDLE_POOL = {
         choices: ["Footsteps", "Breaths", "Photos", "Fingerprints"],
         answer: "Footsteps",
         explanation: "FOOTSTEPS - Every time you take a step forward, you leave a footprint (step) behind you!"
+      },
+      {
+        id: "every_200_3",
+        question: "What has a thumb and four fingers but is not alive?",
+        choices: ["A glove", "A hand puppet", "A shadow", "A skeleton"],
+        answer: "A glove",
+        explanation: "A GLOVE - A glove has a fabric thumb and four finger slots to fit your hand perfectly, but it is not alive!"
       }
     ],
     300: [
@@ -214,6 +298,13 @@ const RIDDLE_POOL = {
         choices: ["A flashlight", "A candle", "A tree", "A light bulb"],
         answer: "A candle",
         explanation: "A CANDLE - A new candle is tall, but as the flame burns the wax down over time, it gets shorter and shorter!"
+      },
+      {
+        id: "every_300_3",
+        question: "I have keys but no locks. I have space but no room. You can enter but can't go outside. What am I?",
+        choices: ["A keyboard", "A diary", "A hotel", "A briefcase"],
+        answer: "A keyboard",
+        explanation: "A KEYBOARD - A computer keyboard has letter keys, a space bar, and an Enter key, but it cannot lock any doors!"
       }
     ],
     400: [
@@ -230,6 +321,13 @@ const RIDDLE_POOL = {
         choices: ["A staircase", "An escalator", "A roller coaster", "A playground slide"],
         answer: "A staircase",
         explanation: "A STARCASE - A staircase leads up and down to different floors, but it stays in the exact same spot!"
+      },
+      {
+        id: "every_400_3",
+        question: "What has one head, one foot, and four legs?",
+        choices: ["A bed", "A table", "A dog", "A chair"],
+        answer: "A bed",
+        explanation: "A BED - A bed has a head (headboard), a foot (footboard), and four legs supporting it!"
       }
     ],
     500: [
@@ -246,6 +344,13 @@ const RIDDLE_POOL = {
         choices: ["A needle", "A hurricane", "A potato", "A button"],
         answer: "A needle",
         explanation: "A NEEDLE - The small loop at the end of a sewing needle where the thread goes is called the 'eye', but it has no vision!"
+      },
+      {
+        id: "every_500_3",
+        question: "What is easy to get into but extremely hard to get out of?",
+        choices: ["Trouble", "A box", "A sweater", "A dream"],
+        answer: "Trouble",
+        explanation: "TROUBLE - It is very easy to make a bad choice and get into trouble, but it takes a lot of hard work and honesty to get out of it!"
       }
     ]
   },
@@ -264,6 +369,13 @@ const RIDDLE_POOL = {
         choices: ["Rain", "Snow", "Leaves", "Sleet"],
         answer: "Rain",
         explanation: "RAIN - Rain drops fall thousands of feet from clouds, bringing crucial water to plants and animals!"
+      },
+      {
+        id: "nat_100_3",
+        question: "I am a beautiful green leaf on a tree. What color am I in the fall?",
+        choices: ["Red, orange, or yellow", "Green", "Blue", "Purple"],
+        answer: "Red, orange, or yellow",
+        explanation: "RED, ORANGE, OR YELLOW - In autumn, leaves stop making green chlorophyll and reveal beautiful warm colors!"
       }
     ],
     200: [
@@ -280,6 +392,13 @@ const RIDDLE_POOL = {
         choices: ["The Moon", "A comet", "Venus", "A shooting star"],
         answer: "The Moon",
         explanation: "THE MOON - The Moon orbits Earth and reflects sunlight. Its phases make it look like it is changing shape!"
+      },
+      {
+        id: "nat_200_3",
+        question: "What has bark but no bite, and leaves but never goes anywhere?",
+        choices: ["A tree", "A book", "A dog", "A plant"],
+        answer: "A tree",
+        explanation: "A TREE - A tree has wooden 'bark' protecting its trunk, and green 'leaves' growing on its branches!"
       }
     ],
     300: [
@@ -296,6 +415,13 @@ const RIDDLE_POOL = {
         choices: ["A cloud", "A snowflake", "A hot air balloon", "Fog"],
         answer: "A cloud",
         explanation: "A CLOUD - Clouds form when water vapor rises, cools, and condenses into visible clusters of droplets in the sky!"
+      },
+      {
+        id: "nat_300_3",
+        question: "What rises in the morning, sets in the evening, and makes your shadow very long?",
+        choices: ["The Sun", "The Moon", "A cloud", "A hot air balloon"],
+        answer: "The Sun",
+        explanation: "THE SUN - The Sun rises in the east and sets in the west. When it is low near the horizon, it casts very long shadows!"
       }
     ],
     400: [
@@ -312,6 +438,13 @@ const RIDDLE_POOL = {
         choices: ["Algae & Phytoplankton", "Sea anemones", "Jellyfish", "Corals"],
         answer: "Algae & Phytoplankton",
         explanation: "ALGAE & PHYTOPLANKTON - These tiny ocean plants produce over 50% of the world's oxygen through photosynthesis!"
+      },
+      {
+        id: "nat_400_3",
+        question: "I am a frozen star-shaped crystal that falls from winter clouds. No two of me are exactly alike. What am I?",
+        choices: ["A snowflake", "An icicle", "A hailstone", "Frost"],
+        answer: "A snowflake",
+        explanation: "A SNOWFLAKE - Every single snowflake has a unique, beautiful geometric structure made of frozen water crystal!"
       }
     ],
     500: [
@@ -328,6 +461,13 @@ const RIDDLE_POOL = {
         choices: ["A rainbow", "The Northern Lights", "A bridge in Venice", "A sunset"],
         answer: "A rainbow",
         explanation: "A RAINBOW - A rainbow is an optical phenomenon made of light refracting in water droplets. It looks like a bridge, but has no physical form!"
+      },
+      {
+        id: "nat_500_3",
+        question: "What goes up when rain comes down?",
+        choices: ["An umbrella", "A cloud", "A kite", "A balloon"],
+        answer: "An umbrella",
+        explanation: "AN UMBRELLA - When rain falls down, people open umbrellas and raise them up to stay dry!"
       }
     ]
   },
@@ -346,6 +486,13 @@ const RIDDLE_POOL = {
         choices: ["0", "1", "10", "Infinity"],
         answer: "0",
         explanation: "0 - Multiplying any quantity by zero means you have zero groups of that quantity, so the result is always zero!"
+      },
+      {
+        id: "math_100_3",
+        question: "How many sides does a rectangle have?",
+        choices: ["4", "3", "5", "6"],
+        answer: "4",
+        explanation: "4 - A rectangle always has exactly four straight sides and four 90-degree corners!"
       }
     ],
     200: [
@@ -362,6 +509,13 @@ const RIDDLE_POOL = {
         choices: ["9", "8", "17", "0"],
         answer: "9",
         explanation: "9 - The riddle says 'All BUT nine run away', which means the nine sheep that did NOT run away are still there!"
+      },
+      {
+        id: "math_200_3",
+        question: "If you have 3 apples and you take away 2, how many do you have?",
+        choices: ["2", "1", "3", "0"],
+        answer: "2",
+        explanation: "2 - If YOU take away 2 apples, those 2 apples are now in your hands, so you have 2!"
       }
     ],
     300: [
@@ -378,6 +532,13 @@ const RIDDLE_POOL = {
         choices: ["32", "20", "24", "64"],
         answer: "32",
         explanation: "32 - Each number in this sequence is multiplied by 2 (doubled) to get the next number: 16 x 2 = 32!"
+      },
+      {
+        id: "math_300_3",
+        question: "What mathematical symbol can you place between 5 and 6 to get a number larger than 5 but smaller than 6?",
+        choices: ["A decimal point", "A plus sign", "A minus sign", "A division sign"],
+        answer: "A decimal point",
+        explanation: "A DECIMAL POINT - Placing a decimal point between them gives 5.6, which is strictly between 5 and 6!"
       }
     ],
     400: [
@@ -394,6 +555,13 @@ const RIDDLE_POOL = {
         choices: ["7.5 degrees", "0 degrees", "90 degrees", "15 degrees"],
         answer: "7.5 degrees",
         explanation: "7.5 DEGREES - At 3:15, the minute hand is on the 3. But the hour hand has moved 1/4 of the way toward the 4. Since each hour is 30 degrees, 1/4 of 30 is 7.5 degrees!"
+      },
+      {
+        id: "math_400_3",
+        question: "I am a three-digit number. My tens digit is 6. My hundreds digit is 3 less than my tens. My ones digit is 2 more than my hundreds. What am I?",
+        choices: ["365", "264", "466", "163"],
+        answer: "365",
+        explanation: "365 - Let's check: Tens digit is 6. Hundreds digit (3) is 6 - 3 = 3. Ones digit (5) is 3 + 2 = 5. The number is 365!"
       }
     ],
     500: [
@@ -410,6 +578,13 @@ const RIDDLE_POOL = {
         choices: ["194", "272", "383", "491"],
         answer: "194",
         explanation: "194 - Let's check: The tens digit (9) is 5 more than the ones digit (4). The hundreds digit (1) is 8 less than the tens digit (9). The number is 194!"
+      },
+      {
+        id: "math_500_3",
+        question: "A sphere has how many flat faces?",
+        choices: ["0", "1", "2", "infinite"],
+        answer: "0",
+        explanation: "0 - A sphere (like a marble or basketball) is completely curved and has zero flat faces!"
       }
     ]
   },
@@ -428,6 +603,13 @@ const RIDDLE_POOL = {
         choices: ["Second place", "First place", "Third place", "Last place"],
         answer: "Second place",
         explanation: "SECOND PLACE - You took the spot of the person who was in second, so now you are in second place, and they are behind you!"
+      },
+      {
+        id: "trick_100_3",
+        question: "What has words but never speaks a single sound?",
+        choices: ["A book", "A radio", "A mime", "A television"],
+        answer: "A book",
+        explanation: "A BOOK - A book is packed with thousands of words, but it has no mouth so it stays completely quiet!"
       }
     ],
     200: [
@@ -444,6 +626,12 @@ const RIDDLE_POOL = {
         choices: ["All of them", "February only", "January", "None of them"],
         answer: "All of them",
         explanation: "ALL OF THEM - Every single month has at least 28 days! February has only 28 (or 29), but the others have 30 or 31!"
+      },
+      {
+        id: "trick_200_3",
+        question: "What can you hold in your right hand but never in your left hand?",
+        choices: ["Your left elbow", "Your left hand", "A pen", "A phone"],
+        answer: "YOUR LEFT ELBOW - You can easily grab your left elbow with your right hand, but it is physically impossible to hold it with your left hand!"
       }
     ],
     300: [
@@ -460,6 +648,13 @@ const RIDDLE_POOL = {
         choices: ["Stop imagining!", "Swim to the top", "Drink the water", "Use a flashlight"],
         answer: "Stop imagining!",
         explanation: "STOP IMAGINING - The riddle starts with 'Imagine you are...', so if you just stop imagining it, you are instantly safe!"
+      },
+      {
+        id: "trick_300_3",
+        question: "A boy is twice as old as his sister. If the boy is 6, how old will the sister be when the boy is 10?",
+        choices: ["7", "8", "5", "10"],
+        answer: "7",
+        explanation: "7 - When the boy is 6, his sister is half his age, so she is 3 (3 years younger). When the boy becomes 10, his sister will still be 3 years younger, which makes her 7!"
       }
     ],
     400: [
@@ -476,6 +671,13 @@ const RIDDLE_POOL = {
         choices: ["Mary", "Nunu", "Nancy", "Nina"],
         answer: "Mary",
         explanation: "MARY - Read the riddle carefully: 'Mary's father has five daughters...'. The fifth daughter is Mary herself!"
+      },
+      {
+        id: "trick_400_3",
+        question: "What side of a dog has the most fur?",
+        choices: ["The outside", "The top", "The back", "The inside"],
+        answer: "The outside",
+        explanation: "THE OUTSIDE - The outside of a dog has all the fur, while the inside has none!"
       }
     ],
     500: [
@@ -492,6 +694,13 @@ const RIDDLE_POOL = {
         choices: ["Nine", "A party", "Too many", "A group"],
         answer: "Nine",
         explanation: "NINE - Four plus five is simply nine! It is a mathematical trick question!"
+      },
+      {
+        id: "trick_500_3",
+        question: "If 10 people took 10 hours to build a brick wall, how long would it take 5 people to build the exact same wall?",
+        choices: ["Zero hours", "20 hours", "5 hours", "10 hours"],
+        answer: "Zero hours",
+        explanation: "ZERO HOURS - The wall is already built by the first 10 people, so it takes 5 people zero hours to build it!"
       }
     ]
   }
