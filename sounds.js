@@ -5,13 +5,18 @@ const SoundEffects = (() => {
   let audioCtx = null;
   let isMuted = false;
 
-  // Initialize or resume the Audio Context
+  // Initialize or resume the Audio Context with error protection
   function initAudio() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+    } catch (e) {
+      console.warn("Web Audio API is not supported or blocked by browser policies.", e);
+      audioCtx = null;
     }
     return audioCtx;
   }
@@ -46,6 +51,7 @@ const SoundEffects = (() => {
     playClick: () => {
       if (isMuted) return;
       initAudio();
+      if (!audioCtx) return;
       const now = audioCtx.currentTime;
 
       const osc = audioCtx.createOscillator();
@@ -65,6 +71,7 @@ const SoundEffects = (() => {
     playTick: () => {
       if (isMuted) return;
       initAudio();
+      if (!audioCtx) return;
       const now = audioCtx.currentTime;
 
       const osc = audioCtx.createOscillator();
@@ -83,6 +90,7 @@ const SoundEffects = (() => {
     playCorrect: () => {
       if (isMuted) return;
       initAudio();
+      if (!audioCtx) return;
       const now = audioCtx.currentTime;
 
       // Play a happy major chord arpeggio
@@ -111,6 +119,7 @@ const SoundEffects = (() => {
     playIncorrect: () => {
       if (isMuted) return;
       initAudio();
+      if (!audioCtx) return;
       const now = audioCtx.currentTime;
 
       // Sad detuned downward buzz
@@ -139,6 +148,7 @@ const SoundEffects = (() => {
     playDrumroll: (durationSeconds = 2.5) => {
       if (isMuted) return;
       initAudio();
+      if (!audioCtx) return;
       const now = audioCtx.currentTime;
 
       // Create white noise buffer for drumroll brush effect
@@ -234,6 +244,7 @@ const SoundEffects = (() => {
     playVictory: () => {
       if (isMuted) return;
       initAudio();
+      if (!audioCtx) return;
       const now = audioCtx.currentTime;
 
       // Celebratory melody arpeggio sequence

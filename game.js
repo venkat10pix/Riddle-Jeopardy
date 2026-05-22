@@ -909,6 +909,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Sort teams by descending score
     const rankedTeams = [...state.teams].sort((a, b) => b.score - a.score);
+    const topScore = rankedTeams[0].score;
 
     // Render list
     rankedTeams.forEach((team, index) => {
@@ -919,12 +920,22 @@ document.addEventListener("DOMContentLoaded", () => {
       // Check if there is a score tie with another team
       const isTied = rankedTeams.some((t, i) => t.score === team.score && i !== index);
       
-      // Compute ordinal rank
-      let rankDisplay = `${index + 1}`;
-      if (index === 0) rankDisplay = "👑";
+      // Determine rank display and class (accounting for ties)
+      let rankNumber = index + 1;
+      for (let i = 0; i < index; i++) {
+        if (rankedTeams[i].score === team.score) {
+          rankNumber = i + 1;
+          break;
+        }
+      }
+      
+      let rankDisplay = `${rankNumber}`;
+      if (rankNumber === 1 && topScore > 0) {
+        rankDisplay = "👑";
+      }
 
       item.innerHTML = `
-        <div class="leaderboard-rank rank-${index + 1}">${rankDisplay}</div>
+        <div class="leaderboard-rank rank-${rankNumber}">${rankDisplay}</div>
         <div class="leaderboard-avatar" style="--team-color: ${team.color};">${team.avatar || "👤"}</div>
         <div class="leaderboard-name">
           ${team.name}
@@ -994,32 +1005,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // TIE BREAKER DETECTED!
     if (firstPlaceTiedTeams.length > 1 && !state.isTieBreaker) {
-      initiateTieBreakerSuddenDeath(firstPlaceTiedTeams);
-      return;
+      // Only do sudden death if there is at least one active (unanswered) tile remaining on the board!
+      const activeTiles = Array.from(document.querySelectorAll(".tile-card:not(.disabled)"));
+      if (activeTiles.length > 0) {
+        initiateTieBreakerSuddenDeath(firstPlaceTiedTeams);
+        return;
+      }
     }
 
-    // Standard single winner podium build
-    finalAnnouncement.textContent = `🏆 ${rankedTeams[0].name} wins the Riddle Crown! 🏆`;
+    // Set header announcement
+    if (firstPlaceTiedTeams.length > 1) {
+      finalAnnouncement.textContent = `🏆 It's a Tie! Riddle Crowns for Everyone! 🏆`;
+    } else {
+      finalAnnouncement.textContent = `🏆 ${rankedTeams[0].name} wins the Riddle Crown! 🏆`;
+    }
     playAgainBtn.style.display = "inline-flex";
 
-    // Setup podium pedestals: 1st, 2nd, 3rd, 4th, 5th
-    // To arrange them visually on screen: 2nd, 1st, 3rd, 4th, 5th
+    // Setup podium pedestals (accounting for ties)
     const visualOrdering = [];
-    if (rankedTeams[1]) visualOrdering.push({ team: rankedTeams[1], rank: 2, heightClass: "podium-2nd", glow: "rgba(203, 213, 225, 0.2)" });
-    visualOrdering.push({ team: rankedTeams[0], rank: 1, heightClass: "podium-1st", glow: "rgba(255, 183, 3, 0.4)" });
-    if (rankedTeams[2]) visualOrdering.push({ team: rankedTeams[2], rank: 3, heightClass: "podium-3rd", glow: "rgba(180, 83, 9, 0.2)" });
-    
-    // Remaining ranks trailing at the side
-    for (let i = 3; i < rankedTeams.length; i++) {
-      visualOrdering.push({
-        team: rankedTeams[i],
-        rank: i + 1,
-        heightClass: `podium-${i + 1}th`,
-        glow: "rgba(255,255,255,0.05)"
-      });
-    }
+    rankedTeams.forEach((team, index) => {
+      // Determine actual rank position
+      let displayRank = index + 1;
+      for (let i = 0; i < index; i++) {
+        if (rankedTeams[i].score === team.score) {
+          displayRank = i + 1;
+          break;
+        }
+      }
 
-    visualOrdering.forEach(item => {
+      let heightClass = "podium-3rd";
+      let glow = "rgba(180, 83, 9, 0.2)";
+      
+      if (displayRank === 1) {
+        heightClass = "podium-1st";
+        glow = "rgba(255, 183, 3, 0.4)";
+      } else if (displayRank === 2) {
+        heightClass = "podium-2nd";
+        glow = "rgba(203, 213, 225, 0.2)";
+      } else {
+        heightClass = `podium-${displayRank}th`;
+        glow = "rgba(255, 255, 255, 0.05)";
+      }
+
+      visualOrdering.push({
+        team: team,
+        rank: displayRank,
+        heightClass: heightClass,
+        glow: glow
+      });
+    });
+
+    // Arrange pedestals visually: 2nd place on left, 1st place in center, 3rd place on right, others trailing
+    const orderedStands = [];
+    const firsts = visualOrdering.filter(item => item.rank === 1);
+    const seconds = visualOrdering.filter(item => item.rank === 2);
+    const thirds = visualOrdering.filter(item => item.rank === 3);
+    const rest = visualOrdering.filter(item => item.rank > 3);
+
+    orderedStands.push(...seconds);
+    orderedStands.push(...firsts);
+    orderedStands.push(...thirds);
+    orderedStands.push(...rest);
+
+    orderedStands.forEach(item => {
       const stand = document.createElement("div");
       stand.className = `podium-stand ${item.heightClass}`;
 
