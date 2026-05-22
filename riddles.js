@@ -525,6 +525,48 @@ const TIE_BREAKER_POOL = [
     choices: ["An egg", "A lock", "A promise", "A mirror"],
     answer: "An egg",
     explanation: "AN EGG - You must crack or break an egg shell before you can cook or bake with it!"
+  },
+  {
+    id: "tie_5",
+    question: "I am clean when I am black, and dirty when I am white. What am I?",
+    choices: ["A blackboard", "A white paper", "A cloud", "A shadow"],
+    answer: "A blackboard",
+    explanation: "A BLACKBOARD - When a blackboard is clean, it is black. When you write on it with white chalk and make it dirty, it becomes white!"
+  },
+  {
+    id: "tie_6",
+    question: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
+    choices: ["An echo", "A whistle", "A radio", "A cloud"],
+    answer: "An echo",
+    explanation: "AN ECHO - An echo repeats the sounds you make without having its own mouth or ears, and it travels through the air!"
+  },
+  {
+    id: "tie_7",
+    question: "I have cities but no houses, mountains but no trees, and water but no fish. What am I?",
+    choices: ["A map", "A globe", "A drawing", "A storybook"],
+    answer: "A map",
+    explanation: "A MAP - A map shows cities, mountains, and oceans, but they are just drawings so they don't have real houses, trees, or fish!"
+  },
+  {
+    id: "tie_8",
+    question: "What has a head, a tail, is copper-brown, but has no legs?",
+    choices: ["A penny", "A snake", "A caterpillar", "A monkey"],
+    answer: "A penny",
+    explanation: "A PENNY - A penny coin is copper-brown, has a 'heads' side and a 'tails' side, and has no legs!"
+  },
+  {
+    id: "tie_9",
+    question: "You see a boat filled with people. It has not sunk, but when you look again you don't see a single person on it. Why?",
+    choices: ["They are all married couples", "They fell off the boat", "They went below deck", "It was a ghost ship"],
+    answer: "They are all married couples",
+    explanation: "THEY ARE ALL MARRIED COUPLES - Since they are all married, there is not a single (unmarried) person on the boat!"
+  },
+  {
+    id: "tie_10",
+    question: "What word contains all 26 letters of the alphabet but only has 7 letters?",
+    choices: ["Alphabet", "Letters", "Keyboard", "Dictionary"],
+    answer: "Alphabet",
+    explanation: "ALPHABET - The word A-L-P-H-A-B-E-T contains all the letters of the alphabet by definition, and the word itself has exactly 7 letters!"
   }
 ];
 

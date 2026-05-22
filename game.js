@@ -600,7 +600,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function triggerRiddleQuestion(category, difficulty, tileEl) {
-    if (tileEl.classList.contains("disabled")) return;
+    if (tileEl && tileEl.classList.contains("disabled")) return;
     
     SoundEffects.playClick();
     
@@ -611,20 +611,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get Riddle object
     let riddle;
     if (state.isTieBreaker) {
-      riddle = TIE_BREAKER_POOL[state.currentTieBreakerIndex % TIE_BREAKER_POOL.length];
+      riddle = TIE_BREAKER_POOL[state.tieBreakerQuestionIndex % TIE_BREAKER_POOL.length];
     } else {
       riddle = state.riddles[category][difficulty];
     }
     
     state.activeRiddle = riddle;
 
+    const activeTeam = state.teams[state.currentTeamIndex];
+
     // Fill screen details
-    modalCatTitle.textContent = state.isTieBreaker ? "Sudden Death Tie-Breaker!" : category;
-    modalPointVal.textContent = state.isTieBreaker ? "First to Answer Wins!" : `$${difficulty} - ${diffDifficultyMap[difficulty]}`;
+    modalCatTitle.textContent = state.isTieBreaker ? `Tie-Breaker: Round ${state.tieBreakerRound} of 3` : category;
+    modalPointVal.textContent = state.isTieBreaker ? `Riddle for ${activeTeam.name}` : `$${difficulty} - ${diffDifficultyMap[difficulty]}`;
     
     modalRiddleText.textContent = riddle.question;
 
-    const activeTeam = state.teams[state.currentTeamIndex];
     modalTeamAvatar.textContent = activeTeam.avatar || "👤";
     modalTeamName.textContent = activeTeam.name;
     modalTeamName.style.color = activeTeam.color;
@@ -837,34 +838,73 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(state.timerInterval);
 
     if (state.isTieBreaker) {
+      const activeTeam = state.teams[state.currentTeamIndex];
       if (wasCorrect) {
-        // Sudden death winner crowns!
-        const winningTeam = state.teams[state.currentTeamIndex];
-        // Give 1 point just to ensure they lead clearly
-        winningTeam.score += 1;
-        state.isTieBreaker = false;
-        document.getElementById("tie-breaker-announcement").style.display = "none";
-        triggerPodiumScreenFlow();
-      } else {
-        // Tie breaker continues! Move to next tied team
-        state.currentTieBreakerIndex++;
-        
-        // Find which tied team goes next
-        let foundNext = false;
-        let checks = 0;
-        while (!foundNext && checks < state.teams.length) {
-          state.currentTeamIndex = (state.currentTeamIndex + 1) % state.teams.length;
-          const nextTeam = state.teams[state.currentTeamIndex];
-          if (state.tieBreakerTeams.some(t => t.name === nextTeam.name)) {
-            foundNext = true;
-          }
-          checks++;
-        }
+        state.tieBreakerScores[activeTeam.name] = (state.tieBreakerScores[activeTeam.name] || 0) + 1;
+      }
 
-        // Trigger next tie-breaker riddle
+      state.tieBreakerQuestionIndex++;
+      state.tieBreakerActiveTeamIndex++;
+
+      // Check if all tied teams have completed the current round
+      if (state.tieBreakerActiveTeamIndex >= state.tieBreakerTeams.length) {
+        // Round complete! Let's evaluate the standings for a single leader
+        const sortedTied = [...state.tieBreakerTeams].sort((a, b) => {
+          const scoreA = state.tieBreakerScores[a.name] || 0;
+          const scoreB = state.tieBreakerScores[b.name] || 0;
+          return scoreB - scoreA;
+        });
+
+        const leaderScore = state.tieBreakerScores[sortedTied[0].name] || 0;
+        const runnerUpScore = sortedTied[1] ? (state.tieBreakerScores[sortedTied[1].name] || 0) : 0;
+
+        if (leaderScore > runnerUpScore) {
+          // A single team has taken the lead! They win the Riddle Crown.
+          const winningTeam = state.teams.find(t => t.name === sortedTied[0].name);
+          winningTeam.score += 1; // 1-point bonus so they lead the final ranks
+          state.isTieBreaker = false;
+          triggerPodiumScreenFlow();
+        } else {
+          // Still a tie! Let's check round limits
+          if (state.tieBreakerRound >= 3) {
+            // Reached the maximum of 3 rounds! End the game and declare a shared tie.
+            state.isTieBreaker = false;
+            triggerPodiumScreenFlow();
+          } else {
+            // Advance to the next tie-breaker round
+            state.tieBreakerRound++;
+            state.tieBreakerActiveTeamIndex = 0;
+
+            const firstTeam = state.tieBreakerTeams[0];
+            state.currentTeamIndex = state.teams.findIndex(t => t.name === firstTeam.name);
+
+            // Trigger Transition Announcement
+            const banner = document.getElementById("tie-breaker-announcement");
+            const namesEl = document.getElementById("tie-breaker-teams-names");
+            const subheadline = banner.querySelector("p.tie-subheadline:last-of-type");
+
+            namesEl.textContent = `Round ${state.tieBreakerRound} of 3: Still Tied!`;
+            if (subheadline) {
+              subheadline.textContent = `Current Tiebreaker Score: ${state.tieBreakerTeams.map(t => `${t.name}: ${state.tieBreakerScores[t.name] || 0}`).join(", ")}`;
+            }
+
+            SoundEffects.playIncorrect();
+            banner.style.display = "flex";
+
+            setTimeout(() => {
+              banner.style.display = "none";
+              triggerRiddleQuestion(null, null, null);
+            }, 3000);
+          }
+        }
+      } else {
+        // Current round in progress: advance to the next tied team
+        const nextTeam = state.tieBreakerTeams[state.tieBreakerActiveTeamIndex];
+        state.currentTeamIndex = state.teams.findIndex(t => t.name === nextTeam.name);
+
         setTimeout(() => {
           triggerRiddleQuestion(null, null, null);
-        }, 1000);
+        }, 1200);
       }
       return;
     }
@@ -1019,13 +1059,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const firstPlaceTiedTeams = state.teams.filter(t => t.score === topScore);
 
     // TIE BREAKER DETECTED!
-    if (firstPlaceTiedTeams.length > 1 && !state.isTieBreaker) {
-      // Only do sudden death if there is at least one active (unanswered) tile remaining on the board!
-      const activeTiles = Array.from(document.querySelectorAll(".tile-card:not(.disabled)"));
-      if (activeTiles.length > 0) {
-        initiateTieBreakerSuddenDeath(firstPlaceTiedTeams);
-        return;
-      }
+    if (firstPlaceTiedTeams.length > 1 && !state.isTieBreaker && !state.tieBreakerFinished) {
+      initiateTieBreakerSuddenDeath(firstPlaceTiedTeams);
+      return;
     }
 
     // Set header announcement
@@ -1115,16 +1151,27 @@ document.addEventListener("DOMContentLoaded", () => {
   function initiateTieBreakerSuddenDeath(tiedTeams) {
     const banner = document.getElementById("tie-breaker-announcement");
     const namesEl = document.getElementById("tie-breaker-teams-names");
+    const subheadline = banner.querySelector("p.tie-subheadline:last-of-type");
 
     state.isTieBreaker = true;
     state.tieBreakerTeams = tiedTeams;
-    state.currentTieBreakerIndex = 0;
+    state.tieBreakerScores = {}; // teamName: correctCount
+    state.tieBreakerRound = 1;
+    state.tieBreakerActiveTeamIndex = 0;
+    state.tieBreakerQuestionIndex = 0;
+
+    tiedTeams.forEach(t => {
+      state.tieBreakerScores[t.name] = 0;
+    });
     
     // Set active team turn to the first tied team
     const firstTiedIdx = state.teams.findIndex(t => t.name === tiedTeams[0].name);
     state.currentTeamIndex = firstTiedIdx;
 
     namesEl.textContent = tiedTeams.map(t => t.name).join(" & ") + " are tied for first!";
+    if (subheadline) {
+      subheadline.textContent = "Each team will get different difficult riddles! Best of 3 rounds wins. If still tied after 3 rounds, the crown is shared!";
+    }
     
     // Open interstitial sound
     SoundEffects.playIncorrect();
@@ -1140,7 +1187,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setTimeout(() => {
       banner.style.display = "none";
-      // Open Tie breaker Riddle modal directly!
       triggerRiddleQuestion(null, null, null);
     }, 4500);
   }
@@ -1149,6 +1195,10 @@ document.addEventListener("DOMContentLoaded", () => {
   playAgainBtn.addEventListener("click", () => {
     SoundEffects.playClick();
     stopVictoryConfettiFountain();
+    state.tieBreakerFinished = false;
     showScreen("screen-how-to-play");
   });
+
+  // Expose test hook for browser subagent validation
+  window.__game = { state, triggerPodiumScreenFlow, triggerRiddleQuestion };
 });
