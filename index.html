@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riddle Jeopardy! Ultimate Brain Challenge for 5th Graders</title>
+  <meta name="description" content="A fun, game-show-style Riddle Jeopardy game for 5th graders with glowing tiles, animated podium, tie-breaker rounds, and synthesized sound effects!">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Retro Synthesized Audio & Background Settings -->
+  <div class="top-actions">
+    <button id="btn-toggle-mute" class="action-circle-btn" title="Mute/Unmute Sounds" aria-label="Toggle mute">🔊</button>
+    <button id="btn-reset-game" class="action-circle-btn" title="Restart Game" aria-label="Restart Game" style="display: none;">🔄</button>
+  </div>
+
+  <!-- Background Layer -->
+  <div class="mystery-bg"></div>
+  <div class="floating-elements" id="floating-elements-container">
+    <!-- Floating mystery items populated dynamically by JS -->
+  </div>
+
+  <!-- Absolute Confetti Layer -->
+  <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+  <!-- ---------------------------------------------------- -->
+  <!-- SCREEN 1: HOW TO PLAY SCREEN (Default Active) -->
+  <!-- ---------------------------------------------------- -->
+  <main id="screen-how-to-play" class="screen active">
+    <h1 class="game-title">Riddle <span>Jeopardy!</span></h1>
+    <div class="card-panel">
+      <h2 style="font-family: var(--font-header); font-size: 2rem; margin-bottom: 12px; color: var(--neon-cyan);">Are You Ready to Outsmart the Board?</h2>
+      <p style="color: var(--text-dim); font-size: 1.1rem; margin-bottom: 24px;">Welcome to the ultimate game-show challenge designed to bend your brain and test your wordplay powers!</p>
+      
+      <div class="instructions-list">
+        <div class="instruction-step">
+          <div class="step-number">1</div>
+          <div class="step-text"><strong>Gather Your Crew:</strong> Setup 1 to 5 teams, write a cool team name, and select a customized avatar emoji.</div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-number">2</div>
+          <div class="step-text"><strong>Choose Your Challenge:</strong> Select tiles from the 4×5 jeopardy board. Higher points mean tougher, brain-busting riddles!</div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-number">3</div>
+          <div class="step-text"><strong>Watch the Timer:</strong> Discuss with your team! Solve the riddle before time runs out. Get points for correct answers!</div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-number">4</div>
+          <div class="step-text"><strong>Conquer the Podium:</strong> Play until all tiles are cleared. Face tie-breakers if needed and claim the 1st place crown!</div>
+        </div>
+      </div>
+
+      <button id="btn-start-play-flow" class="btn-primary">
+        <span>Let's Play!</span> 🚀
+      </button>
+    </div>
+  </main>
+
+  <!-- ---------------------------------------------------- -->
+  <!-- SCREEN 2: TEAM SETUP SCREEN -->
+  <!-- ---------------------------------------------------- -->
+  <section id="screen-team-setup" class="screen">
+    <h1 class="game-title">Team <span>Setup</span></h1>
+    <div class="card-panel setup-panel">
+      <h2 style="font-family: var(--font-header); font-size: 1.8rem; margin-bottom: 10px;">Assemble the Challengers!</h2>
+      <p style="color: var(--text-dim); margin-bottom: 20px;">Add up to 5 teams. Choose your custom emoji avatar or skip to play with your name!</p>
+      
+      <div class="teams-wrapper" id="teams-setup-list">
+        <!-- Team setup cards will be populated here by JS -->
+        
+        <!-- Add Team Card -->
+        <div class="add-team-card" id="btn-add-team-card">
+          <div class="add-team-icon">➕</div>
+          <span style="font-family: var(--font-header); font-size: 1.1rem; color: var(--neon-cyan);">Add Team</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px; display: flex; gap: 16px; justify-content: center;">
+        <button id="btn-back-to-howtoplay" class="btn-primary" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; box-shadow: none;">
+          ↩ Back
+        </button>
+        <button id="btn-start-jeopardy-game" class="btn-primary">
+          Start Game! 🏁
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------- -->
+  <!-- SCREEN 3: GAME BOARD SCREEN -->
+  <!-- ---------------------------------------------------- -->
+  <section id="screen-game-board" class="screen board-screen-layout">
+    <div class="game-header-bar">
+      <h2 style="font-family: var(--font-header); font-size: 2.2rem; color: #fff; text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);">Riddle <span>Jeopardy</span></h2>
+      
+      <!-- Current Team Turn Indicator Box -->
+      <div class="turn-indicator-box" id="active-turn-box">
+        <div class="turn-avatar" id="turn-avatar-indicator">🦄</div>
+        <div class="turn-details">
+          <span class="turn-label">Current Turn</span>
+          <span class="turn-team-name" id="turn-team-name-indicator">Riddle Masters</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- The 4x5 Jeopardy Board -->
+    <div class="board-container">
+      <!-- Headers row (4 categories) -->
+      <div class="grid-row-header" id="board-category-headers">
+        <!-- Filled dynamically by JS -->
+      </div>
+      <!-- 4x5 Board Grid -->
+      <div class="board-grid-4x5" id="board-tiles-grid">
+        <!-- Filled dynamically by JS -->
+      </div>
+    </div>
+
+    <!-- Difficulty Legend -->
+    <div class="difficulty-legend">
+      <span class="legend-title">Difficulty Legend:</span>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--neon-cyan);"></div>
+        <span>$100 = Easy Peasy</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--neon-emerald);"></div>
+        <span>$200 = Getting Warm</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--neon-gold);"></div>
+        <span>$300 = Mind Bender</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--neon-pink);"></div>
+        <span>$400 = Brain Buster</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: var(--neon-purple);"></div>
+        <span>$500 = Impossible</span>
+      </div>
+    </div>
+
+    <!-- Score Summary Bar at bottom of board -->
+    <div class="board-scores-panel" id="board-scores-panel">
+      <!-- Populated dynamically by JS -->
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------- -->
+  <!-- SCREEN 4: QUESTION FULL-SCREEN MODAL -->
+  <!-- ---------------------------------------------------- -->
+  <dialog id="screen-question-modal" class="question-modal" aria-modal="true" aria-labelledby="riddle-question-id">
+    <div class="question-container">
+      <!-- Close modal button -->
+      <button class="close-modal-btn" id="btn-close-question" aria-label="Close question">✖</button>
+      
+      <!-- Meta details -->
+      <div class="question-header">
+        <div class="question-meta">
+          <span class="question-category" id="question-category-title">Wordplay Wonders</span>
+          <span class="question-points" id="question-point-value">$100 - Easy Peasy</span>
+        </div>
+
+        <!-- Circular Countdown Timer -->
+        <div class="timer-container" id="question-timer-wrapper">
+          <svg class="timer-svg" viewBox="0 0 80 80">
+            <circle class="timer-bg-circle" cx="40" cy="40" r="35"></circle>
+            <circle class="timer-progress-circle" id="timer-progress-bar" cx="40" cy="40" r="35"></circle>
+          </svg>
+          <div class="timer-text" id="timer-countdown-text">60</div>
+        </div>
+      </div>
+
+      <!-- Riddle Text Box -->
+      <div class="riddle-box">
+        <p class="riddle-text" id="riddle-question-id">What gets wetter the more you dry?</p>
+      </div>
+
+      <!-- Turn Indicator within question screen -->
+      <div style="margin-bottom: 20px; font-family: var(--font-header); font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+        <span>🤔 Thinking Team:</span>
+        <span id="question-team-avatar">🦄</span>
+        <strong id="question-team-name" style="color: var(--neon-cyan);">Riddle Masters</strong>
+      </div>
+
+      <!-- "Answer Ready" overlay that covers options initially so kids discuss first -->
+      <div class="discussion-overlay" id="question-discussion-overlay">
+        <h3 class="discussion-headline">Gather round & discuss! Ready to choose?</h3>
+        <button id="btn-answer-ready" class="btn-primary ready-pulse-btn">
+          ✨ Answer Ready! ✨
+        </button>
+      </div>
+
+      <!-- 4 Answer Choices Grid -->
+      <div class="answers-grid" id="question-choices-grid">
+        <!-- Choice buttons will be populated here dynamically -->
+      </div>
+
+      <!-- Question States Overlay (Loading, Success, Failure) -->
+      <div class="question-state-overlay" id="question-state-overlay">
+        <!-- Contents populated dynamically by JS: spinner, nice correct/incorrect chimes, reveal answers button -->
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ---------------------------------------------------- -->
+  <!-- SCREEN 5: LEADERBOARD SCREEN -->
+  <!-- ---------------------------------------------------- -->
+  <section id="screen-leaderboard" class="screen">
+    <!-- Home button top right -->
+    <button id="btn-leaderboard-home" class="action-circle-btn" style="position: absolute; top: 24px; right: 88px;" title="Back to Game Board">🏠</button>
+    
+    <h1 class="game-title">Round <span>Leaderboard</span></h1>
+    <div class="card-panel">
+      <h2 class="leaderboard-title" id="leaderboard-round-title">End of Round 1</h2>
+      
+      <div class="leaderboard-list" id="leaderboard-scores-list">
+        <!-- Populated dynamically by JS -->
+      </div>
+
+      <button id="btn-leaderboard-continue" class="btn-primary">
+        Continue to Board 🎮
+      </button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------- -->
+  <!-- SCREEN 6: FINAL PODIUM SCREEN -->
+  <!-- ---------------------------------------------------- -->
+  <section id="screen-final-podium" class="screen">
+    <h1 class="game-title">Champion <span>Podium</span></h1>
+    <div class="card-panel" style="max-width: 900px; padding: 30px;">
+      <h2 style="font-family: var(--font-header); font-size: 2.2rem; color: var(--neon-gold); text-shadow: 0 0 10px rgba(255, 183, 3, 0.4);" id="final-announcement-headline">Drumroll please... 🥁</h2>
+      
+      <!-- 3D Standings Podium -->
+      <div class="podium-container" id="podium-standings-container">
+        <!-- Pedestals will be created dynamically based on rankings -->
+      </div>
+
+      <button id="btn-play-again" class="btn-primary" style="margin-top: 15px;">
+        Play Again! 🔄
+      </button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------- -->
+  <!-- TIE BREAKER INTERSTITIAL OVERLAY -->
+  <!-- ---------------------------------------------------- -->
+  <div id="tie-breaker-announcement" class="tie-breaker-overlay" style="display: none;">
+    <h1 class="tie-headline">TIE DETECTED! 🚨</h1>
+    <h2 class="tie-subheadline" style="color: #fff; font-family: var(--font-header); font-size: 1.8rem; margin: 20px 0;">First Place Tie!</h2>
+    <p class="tie-subheadline" id="tie-breaker-teams-names">Team 1 & Team 2 are tied for the crown!</p>
+    <p class="tie-subheadline" style="margin-top: 15px; font-size: 1.2rem; color: var(--neon-gold);">A sudden-death tie-breaker round starts in a few seconds... First team to buzz and get it right wins!</p>
+    <div class="spinner" style="border-top-color: var(--neon-pink); margin-top: 30px;"></div>
+  </div>
+
+  <!-- Include Scripts -->
+  <script src="riddles.js"></script>
+  <script src="sounds.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
