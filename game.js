@@ -519,23 +519,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateTurnIndicatorUI() {
+    if (!state.teams || state.teams.length === 0) return;
+    if (state.currentTeamIndex === undefined || state.currentTeamIndex < 0 || state.currentTeamIndex >= state.teams.length) {
+      state.currentTeamIndex = 0;
+    }
     const activeTeam = state.teams[state.currentTeamIndex];
+    if (!activeTeam) return;
+
     const borderEl = document.getElementById("active-turn-box");
     const avatarEl = document.getElementById("turn-avatar-indicator");
     const nameEl = document.getElementById("turn-team-name-indicator");
 
-    borderEl.style.setProperty("--team-color", activeTeam.color);
-    borderEl.style.setProperty("--team-color-rgb", activeTeam.colorRGB);
+    if (borderEl) {
+      borderEl.style.setProperty("--team-color", activeTeam.color);
+      borderEl.style.setProperty("--team-color-rgb", activeTeam.colorRGB);
+    }
     
-    avatarEl.textContent = activeTeam.avatar || "👤";
-    avatarEl.style.setProperty("--team-color", activeTeam.color);
+    if (avatarEl) {
+      avatarEl.textContent = activeTeam.avatar || "👤";
+      avatarEl.style.setProperty("--team-color", activeTeam.color);
+    }
 
-    nameEl.textContent = `${activeTeam.name}'s Turn!`;
+    if (nameEl) {
+      nameEl.textContent = `${activeTeam.name}'s Turn!`;
+    }
   }
 
   function updateScoresSummaryUI() {
     const panel = document.getElementById("board-scores-panel");
+    if (!panel) return;
     panel.innerHTML = "";
+
+    if (!state.teams) return;
 
     state.teams.forEach((team, idx) => {
       const pill = document.createElement("div");
